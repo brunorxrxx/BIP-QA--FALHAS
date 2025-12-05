@@ -1,0 +1,338 @@
+/* ===========================
+   BASE
+   =========================== */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f3f5f9;
+  color: #222;
+  font-size: 13px;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+header {
+  background: #003f7f;
+  color: #fff;
+  padding: 15px 25px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+/* ===========================
+   LAYOUT PRINCIPAL
+   =========================== */
+main {
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+.layout {
+  display: flex;
+  gap: 25px;
+  align-items: flex-start;
+}
+
+/* ===========================
+   CARDS
+   =========================== */
+.card {
+  background: #fff;
+  padding: 18px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+/* ===========================
+   UPLOAD
+   =========================== */
+.upload-card {
+  margin-bottom: 20px;
+}
+
+.drop-zone {
+  border: 2px dashed #0078d4;
+  background: #f0f7ff;
+  border-radius: 10px;
+  padding: 22px;
+  text-align: center;
+  font-size: 12px;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.drop-zone.dragover {
+  background: #dbeafe;
+  border-color: #005a9e;
+}
+
+.drop-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-list p {
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+/* ===========================
+   BOTÕES
+   =========================== */
+button {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#process-btn {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: #0078d4;
+  color: #fff;
+}
+
+#process-btn:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  background: #e2e8f0;
+  color: #1a202c;
+  padding: 6px 12px;
+}
+
+/* Botão mostrar/ocultar filtros */
+.toggle-btn {
+  background: #003f7f;
+  color: #fff;
+  padding: 8px 16px;
+  margin-bottom: 15px;
+}
+
+/* Botão minimizar dentro do card de filtros */
+#minimize-filters {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* ===========================
+   SIDEBAR DE FILTROS
+   =========================== */
+.filters-sidebar {
+  width: 300px;
+  transition: width 0.2s ease;
+}
+
+.filters-sidebar.collapsed {
+  width: 70px;
+  overflow: hidden;
+}
+
+.filters-sidebar.collapsed .filter-block,
+.filters-sidebar.collapsed #clear-filters-btn {
+  display: none;
+}
+
+.filter-block {
+  margin-bottom: 12px;
+}
+
+.filter-block label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+/* ===========================
+   CHECKBOX + TOOLTIP
+   =========================== */
+.checkbox-list {
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px 8px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.checkbox-list label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 2px 0;
+  position: relative;
+}
+
+.checkbox-list input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+}
+
+/* Tooltip com texto completo ao passar o mouse */
+.checkbox-list label span:hover::after {
+  content: attr(data-fulltext);
+  position: absolute;
+  left: 25px;
+  top: -2px;
+  background: #003f7f;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* ===========================
+   CONTEÚDO PRINCIPAL
+   =========================== */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Grid de cards superiores (Resumo + Tabela dinâmica) */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+}
+
+/* Grid dos gráficos + preview */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* 50/50 certinho */
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* ===========================
+   GRÁFICOS
+   =========================== */
+.chart-container {
+  position: relative;
+  height: 320px;                 /* mesma altura para todos */
+  padding: 20px 10px 5px;        /* espaço pro título e labels */
+}
+
+/* garante que os canvases ocupem 100% da área do card */
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ===========================
+   TABELAS
+   =========================== */
+.table-wrapper {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th,
+td {
+  border: 1px solid #cbd5e0;
+  padding: 8px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+thead {
+  background: #edf2f7;
+}
+
+/* Linha clicável da tabela de modelo */
+#pivot-modelo-table tbody tr {
+  transition: background 0.12s ease;
+  cursor: pointer;
+}
+
+#pivot-modelo-table tbody tr:hover {
+  background: #f1f5f9;
+}
+
+/* ===========================
+   AUXILIAR
+   =========================== */
+.hidden {
+  display: none;
+}
+
+/* ===========================
+   RESPONSIVO
+   =========================== */
+@media (max-width: 1100px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .cards-grid,
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-sidebar {
+    width: 100%;
+  }
+
+  .filters-sidebar.collapsed {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   AJUSTE FINAL — COLUNA SERIAL NO PREVIEW TRATADO
+   ========================================================= */
+
+/* tabela de falhas tem id="falhas-table" */
+#falhas-table th:nth-child(1),
+#falhas-table td:nth-child(1) {
+  white-space: normal !important;   /* permite quebrar linha */
+  word-break: break-all !important; /* quebra serial longo */
+  overflow: visible !important;
+  text-overflow: unset !important;
+  max-width: 180px;                 /* não deixa estourar o card */
+}

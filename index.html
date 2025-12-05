@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>All in One - Falhas x Output</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Chart.js e plugin de DataLabels -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+    <!-- Nosso JS -->
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <h1>All in One - Falhas x Output</h1>
+        <p>Arraste os arquivos ou selecione-os usando os botões abaixo</p>
+    </header>
+
+    <main>
+        <!-- Botão principal de mostrar/ocultar filtros -->
+        <button id="toggle-filtros" class="toggle-btn">Mostrar filtros</button>
+
+        <!-- ======================== -->
+        <!-- CARD DE UPLOAD CORRIGIDO -->
+        <!-- ======================== -->
+        <section class="card upload-card">
+
+            <!-- DROPZONE -->
+            <div id="drop-zone" class="drop-zone">
+                Arraste os arquivos aqui
+            </div>
+
+            <!-- BOTÕES SEPARADOS -->
+            <div class="upload-buttons">
+                <button id="btn-select-falhas" class="primary-btn">Selecionar Falhas.xlsx</button>
+                <button id="btn-select-output" class="primary-btn">Selecionar Output.xlsx</button>
+            </div>
+
+            <!-- INPUTS ESCONDIDOS (NOVOS E CERTOS) -->
+            <input id="file-input-falhas" type="file" accept=".xlsx" style="display:none" />
+            <input id="file-input-output" type="file" accept=".xlsx" style="display:none" />
+
+            <!-- NOMES DOS ARQUIVOS -->
+            <div class="file-list">
+                <p><strong>Falhas:</strong> <span id="falhas-name">Nenhum arquivo selecionado</span></p>
+                <p><strong>Output:</strong> <span id="output-name">Nenhum arquivo selecionado</span></p>
+            </div>
+
+            <button id="process-btn" disabled>Processar Arquivos</button>
+        </section>
+
+        <!-- Seção de carregamento -->
+        <section id="loading" class="card hidden">
+            Processando arquivos, aguarde...
+        </section>
+
+        <!-- RESULTADOS -->
+        <section id="results" class="hidden">
+            <div class="layout">
+
+                <!-- SIDEBAR DE FILTROS -->
+                <aside id="filters-section" class="filters-sidebar card hidden">
+                    <h2>Filtros</h2>
+                    <button id="minimize-filters" class="secondary-btn">⮜ Minimizar filtros</button>
+
+                    <div class="filter-block">
+                        <label>Estação de teste (Output)</label>
+                        <div id="filter-estacao" class="checkbox-list"></div>
+                    </div>
+
+                    <div class="filter-block">
+                        <label>Linha</label>
+                        <div id="filter-linha" class="checkbox-list"></div>
+                    </div>
+
+                    <div class="filter-block">
+                        <label>Data (arquivo Output)</label>
+                        <div id="filter-data" class="checkbox-list"></div>
+                    </div>
+
+                    <div class="filter-block">
+                        <label>Ordem (Work Order)</label>
+                        <div id="filter-wo" class="checkbox-list"></div>
+                    </div>
+
+                    <div class="filter-block">
+                        <label>Modelo (Nome do Modelo)</label>
+                        <div id="filter-modelo" class="checkbox-list"></div>
+                    </div>
+
+                    <div class="filter-block">
+                        <label>Modelo Serial</label>
+                        <div id="filter-modelo-serial" class="checkbox-list"></div>
+                    </div>
+
+                    <div class="filter-block">
+                        <label>Descrição Ajustada (Falhas)</label>
+                        <div id="filter-descricao-ajustada" class="checkbox-list"></div>
+                    </div>
+
+                    <button id="clear-filters-btn" class="secondary-btn">Limpar filtros</button>
+                </aside>
+
+                <!-- CONTEÚDO PRINCIPAL -->
+                <section class="main-content">
+
+                    <!-- Resumo + Tabela dinâmica -->
+                    <div class="cards-grid">
+                        <section class="card">
+                            <h2>Resumo por Estação</h2>
+                            <div class="table-wrapper">
+                                <table id="resumo-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Estação</th>
+                                            <th>Data</th>
+                                            <th>Board Pass</th>
+                                            <th>Board Fail</th>
+                                            <th>Total</th>
+                                            <th>Taxa Defeito (%)</th>
+                                            <th>FPY (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Tabela Dinâmica - Total por Modelo</h2>
+                            <div class="table-wrapper">
+                                <table id="pivot-modelo-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Modelo</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Gráficos -->
+                    <div class="charts-grid">
+
+                        <section class="card">
+                            <h2>Pareto - Causas (Descrição.1)</h2>
+                            <div class="chart-container">
+                                <canvas id="paretoCausaChart"></canvas>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Pareto - Componentes (Item)</h2>
+                            <div class="chart-container">
+                                <canvas id="paretoItemChart"></canvas>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Falhas por Estação (Pizza)</h2>
+                            <div class="chart-container">
+                                <canvas id="pieEstacaoChart"></canvas>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Falhas (Preview Tratado)</h2>
+                            <div class="table-wrapper">
+                                <table id="falhas-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial</th>
+                                            <th>Estação Ajustada</th>
+                                            <th>Descrição Ajustada</th>
+                                            <th>Descrição.1</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                    </div>
+
+                </section>
+
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
