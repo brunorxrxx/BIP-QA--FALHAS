@@ -36,6 +36,7 @@ const filterWO = document.getElementById("filter-wo");
 const filterModelo = document.getElementById("filter-modelo");
 const filterModeloSerial = document.getElementById("filter-modelo-serial");
 const filterDescricaoAjustada = document.getElementById("filter-descricao-ajustada");
+const filterHora = document.getElementById("filter-hora");
 const clearFiltersBtn = document.getElementById("clear-filters-btn");
 
 // GRÁFICOS
@@ -200,6 +201,26 @@ if (minimizeFiltersBtn) {
 // FUNÇÕES DE FILTRO (CHECKBOX)
 // ===============================
 
+function extrairHora(dataComHora) {
+    if (!dataComHora) return null;
+    
+    // Debug
+    console.log("Processando data com hora:", dataComHora);
+    
+    // Formato: "04/12/2025 07:57:46" ou "2025-12-04 07:57:46"
+    const str = String(dataComHora).trim();
+    
+    // Tenta encontrar padrão HH:MM
+    const match = str.match(/(\d{2}):(\d{2})/);
+    if (match) {
+        const hora = `${match[1]}:${match[2]}`;
+        console.log("Hora extraída:", hora);
+        return hora;
+    }
+    
+    return null;
+}
+
 function preencherCheckboxList(container, values) {
     if (!container) return;
 
@@ -238,6 +259,7 @@ function preencherFiltros(outputRows, falhasRows) {
     const modelos = new Set();
     const modelosSerial = new Set();
     const descricoesAjustadas = new Set();
+    const horas = new Set();
 
     outputRows.forEach((r) => {
         if (r.Estacao) estacoes.add(r.Estacao);
@@ -250,7 +272,17 @@ function preencherFiltros(outputRows, falhasRows) {
 
     falhasRows.forEach((f) => {
         if (f.Descricao_Ajustada) descricoesAjustadas.add(f.Descricao_Ajustada);
+        // Extrair hora do campo "Data da falha" (formato: 04/12/2025 07:57:46)
+        if (f["Data da falha"]) {
+            const hora = extrairHora(f["Data da falha"]);
+            if (hora) {
+                console.log("Hora adicionada ao conjunto:", hora);
+                horas.add(hora);
+            }
+        }
     });
+
+    console.log("Horas encontradas:", Array.from(horas).sort());
 
     preencherCheckboxList(filterEstacao, Array.from(estacoes).sort());
     preencherCheckboxList(filterLinha, Array.from(linhas).sort());
@@ -259,6 +291,7 @@ function preencherFiltros(outputRows, falhasRows) {
     preencherCheckboxList(filterModelo, Array.from(modelos).sort());
     preencherCheckboxList(filterModeloSerial, Array.from(modelosSerial).sort());
     preencherCheckboxList(filterDescricaoAjustada, Array.from(descricoesAjustadas).sort());
+    preencherCheckboxList(filterHora, Array.from(horas).sort());
 
     // ⭐ NOVO: ativar botões Selecionar/Desmarcar
     ativarToggleTodos();
@@ -274,6 +307,7 @@ if (clearFiltersBtn) {
             filterModelo,
             filterModeloSerial,
             filterDescricaoAjustada,
+            filterHora,
         ].forEach((container) => {
             if (!container) return;
             container.querySelectorAll("input:checked").forEach((i) => (i.checked = false));
@@ -333,6 +367,7 @@ function ativarToggleTodos() {
     criarBotaoToggle(filterModelo);
     criarBotaoToggle(filterModeloSerial);
     criarBotaoToggle(filterDescricaoAjustada);
+    criarBotaoToggle(filterHora);
 }
 
 
@@ -349,6 +384,7 @@ function recomputarEDesenhar() {
     const selModelo = getCheckboxValues(filterModelo);
     const selModeloSerial = getCheckboxValues(filterModeloSerial);
     const selDescAjustada = getCheckboxValues(filterDescricaoAjustada);
+    const selHora = getCheckboxValues(filterHora);
 
     const outputFiltrado = outputRows.filter((r) => {
         if (selEstacao.length && !selEstacao.includes(r.Estacao)) return false;
@@ -378,6 +414,14 @@ function recomputarEDesenhar() {
         falhasFiltradas = falhasFiltradas.filter((f) =>
             selDescAjustada.includes(f.Descricao_Ajustada || "")
         );
+    }
+
+    // ⭐ NOVO: Filtro de horas
+    if (selHora.length) {
+        falhasFiltradas = falhasFiltradas.filter((f) => {
+            const hora = extrairHora(f["Data da falha"]);
+            return selHora.includes(hora);
+        });
     }
 
     falhasFiltradas = falhasFiltradas.filter((f) => {
@@ -549,6 +593,26 @@ function calcularPivotModelo(outputFiltrado) {
 function desenharResumoTabela(resumo) {
     resumoTableBody.innerHTML = "";
     resumo.forEach((r) => {
+        const taxaDefeito = r.taxaDefeito * 100;
+        const fpy = r.fpy * 100;
+        
+        // ⭐ CORES CONDICIONAIS (APENAS STYLE)
+        let styleTaxaDefeito = "";
+        let styleFpy = "";
+        
+        // Taxa Defeito > 2.00% → VERMELHO
+        if (taxaDefeito > 2.0) {
+            styleTaxaDefeito = 'style="background-color: #ffcccc; color: #cc0000; font-weight: bold;"';
+        }
+        
+        // FPY >= 99.00% → VERDE
+        if (fpy >= 99.0) {
+            styleFpy = 'style="background-color: #ccffcc; color: #00cc00; font-weight: bold;"';
+        } else {
+            // FPY < 99.00% → VERMELHO
+            styleFpy = 'style="background-color: #ffcccc; color: #cc0000; font-weight: bold;"';
+        }
+        
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${r.estacao}</td>
@@ -556,8 +620,8 @@ function desenharResumoTabela(resumo) {
             <td>${r.pass}</td>
             <td>${r.fail}</td>
             <td>${r.total}</td>
-            <td>${(r.taxaDefeito * 100).toFixed(2)}%</td>
-            <td>${(r.fpy * 100).toFixed(2)}%</td>
+            <td ${styleTaxaDefeito}>${(r.taxaDefeito * 100).toFixed(2)}%</td>
+            <td ${styleFpy}>${(r.fpy * 100).toFixed(2)}%</td>
         `;
         resumoTableBody.appendChild(tr);
     });
