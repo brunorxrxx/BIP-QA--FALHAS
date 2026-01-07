@@ -120,6 +120,15 @@
                         <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-data', this.value)">
                         <div id="filter-data" class="checkbox-list"></div>
                     </div>
+
+                    <div class="filter-block">
+                        <label class="filter-header" onclick="toggleFilter('filter-turno')">
+                            <span>🕐 Turno</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-turno', this.value)">
+                        <div id="filter-turno" class="checkbox-list"></div>
+                    </div>
                 </aside>
 
                 <!-- CONTEÚDO -->
@@ -275,6 +284,30 @@
             });
         }
 
+        // ========== FUNÇÕES DE TURNO ==========
+        function calcularTurno(dataComHora) {
+            if (!dataComHora) return null;
+            
+            const str = String(dataComHora).trim();
+            const match = str.match(/(\d{2}):(\d{2})/);
+            
+            if (!match) return null;
+            
+            const hora = parseInt(match[1]);
+            const minuto = parseInt(match[2]);
+            const tempo = hora + minuto / 60;
+            
+            if (tempo >= 6 && tempo < 15.8) {
+                return "Turno 1 (06:00-15:48)";
+            } else if (tempo >= 15.8 || tempo < 1.15) {
+                return "Turno 2 (15:48-01:09)";
+            } else if (tempo >= 1.15 && tempo < 5.983) {
+                return "Turno 3 (01:09-05:59)";
+            }
+            
+            return null;
+        }
+
         // ========== FILE UPLOAD ==========
         btnSelectFalhas.addEventListener('click', () => fileInputFalhas.click());
         btnSelectOutput.addEventListener('click', () => fileInputOutput.click());
@@ -374,6 +407,7 @@
             const descricoes = new Set();
             const itens = new Set();
             const datas = new Set();
+            const turnos = new Set();
 
             allFalhas.forEach(f => {
                 if (f.Estacao_Ajustada) estacoes.add(f.Estacao_Ajustada);
@@ -381,6 +415,10 @@
                 if (f['Work Order']) wos.add(f['Work Order']);
                 if (f.Descricao_Ajustada) descricoes.add(f.Descricao_Ajustada);
                 if (f.Item) itens.add(f.Item);
+                if (f['Data da falha']) {
+                    const turno = calcularTurno(f['Data da falha']);
+                    if (turno) turnos.add(turno);
+                }
             });
 
             allOutput.forEach(o => {
@@ -398,6 +436,7 @@
             criarCheckboxes('filter-descricao', Array.from(descricoes).sort());
             criarCheckboxes('filter-item', Array.from(itens).sort());
             criarCheckboxes('filter-data', Array.from(datas).sort());
+            criarCheckboxes('filter-turno', Array.from(turnos).sort());
         }
 
         function criarCheckboxes(containerId, items) {
@@ -438,6 +477,7 @@
             const selDescricao = getCheckboxValues('filter-descricao');
             const selItem = getCheckboxValues('filter-item');
             const selData = getCheckboxValues('filter-data');
+            const selTurno = getCheckboxValues('filter-turno');
 
             let falhasFiltradas = allFalhas;
             let outputFiltrado = allOutput;
@@ -474,6 +514,12 @@
             }
             if (selData.length) {
                 outputFiltrado = outputFiltrado.filter(o => selData.includes(o.Data));
+            }
+            if (selTurno.length) {
+                falhasFiltradas = falhasFiltradas.filter(f => {
+                    const turno = calcularTurno(f['Data da falha']);
+                    return selTurno.includes(turno);
+                });
             }
 
             // Aplicar filtros por clique
