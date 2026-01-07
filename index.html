@@ -20,8 +20,6 @@
     <main>
         <div id="message" class="message"></div>
 
-        <button id="toggle-filtros" class="toggle-btn">📊 Mostrar Filtros</button>
-
         <!-- UPLOAD -->
         <section class="card upload-card">
             <div class="drop-zone" id="drop-zone">📁 Arraste os arquivos aqui</div>
@@ -50,11 +48,15 @@
 
         <!-- RESULTS -->
         <section id="results" class="hidden">
+            <button id="toggle-filtros" class="toggle-btn" style="margin-bottom: 16px;">📊 Mostrar Filtros</button>
             <div class="layout">
                 <!-- FILTROS -->
                 <aside class="filters-sidebar card hidden" id="filters-section">
-                    <h2>🔍 Filtros</h2>
-                    <button id="clear-filters-btn" class="secondary-btn">✖ Limpar Tudo</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h2 style="margin: 0;">🔍 Filtros</h2>
+                        <button id="minimize-filters" class="secondary-btn" style="padding: 4px 8px; font-size: 11px;">⮜</button>
+                    </div>
+                    <button id="clear-filters-btn" class="secondary-btn" style="width: 100%; margin-bottom: 10px;">✖ Limpar Tudo</button>
 
                     <div class="filter-block">
                         <label>Estação</label>
@@ -613,7 +615,8 @@
                             type: 'linear',
                             position: 'left',
                             beginAtZero: true,
-                            ticks: { stepSize: 1 }
+                            ticks: { stepSize: 1 },
+                            grace: '10%'
                         },
                         y1: {
                             type: 'linear',
@@ -647,6 +650,32 @@
                 cont[key] = (cont[key] || 0) + 1;
             });
 
+            // Cores para estações
+            const coresEstacoes = {
+                'ICT': '#bbdefb',
+                'S_VI_B': '#e1bee7',
+                'S_VI_T': '#f8bbd0',
+                'FBT': '#ffe0b2',
+                'FVI': '#b2dfdb',
+                'INBOUND': '#c8e6c9',
+                'PACKING': '#ede7f6',
+                'RELATION': '#fce4ec',
+                'REPAIR': '#fff9c4',
+                'ROUTER': '#b3e5fc',
+                'R_FBT': '#f0f4c3',
+                'SCREENING': '#ffebee',
+                'TEST': '#e8f5e9',
+                'TBA': '#eeeeee'
+            };
+
+            // Gerar cores baseadas no tipo
+            let cores = [];
+            if (tipo === 'estacao') {
+                cores = Object.keys(cont).map(label => coresEstacoes[label] || '#0078d4');
+            } else {
+                cores = ['#0078d4', '#0063b1', '#004b8a', '#003f7f', '#667eea', '#764ba2', '#f093fb'];
+            }
+
             if (charts[tipo]) charts[tipo].destroy();
             const ctx = document.getElementById(canvasId).getContext('2d');
             
@@ -656,7 +685,7 @@
                     labels: Object.keys(cont),
                     datasets: [{
                         data: Object.values(cont),
-                        backgroundColor: ['#0078d4', '#0063b1', '#004b8a', '#003f7f', '#667eea', '#764ba2', '#f093fb']
+                        backgroundColor: cores
                     }]
                 },
                 options: {
