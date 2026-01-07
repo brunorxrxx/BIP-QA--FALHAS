@@ -2,7 +2,7 @@
 // CONFIGURAÇÃO DE API - RAILWAY
 // ===============================
 // ⚠️ ALTERE ISSO PARA SUA URL DO RAILWAY
-const API_URL = 'https://seu-url-railway.up.railway.app';
+const API_URL = 'https://bip-qa-falhas-production.up.railway.app';
 
 // ===============================
 // ELEMENTOS BÁSICOS
