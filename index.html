@@ -46,23 +46,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .toggle-btn {
-            background: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .toggle-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
         .upload-card {
             text-align: center;
         }
@@ -74,7 +57,6 @@
             margin-bottom: 20px;
             background: #f8f9ff;
             cursor: pointer;
-            transition: all 0.3s;
             color: #667eea;
             font-weight: 600;
         }
@@ -82,11 +64,6 @@
         .drop-zone:hover {
             border-color: #764ba2;
             background: #f0f0ff;
-        }
-
-        .drop-zone.dragover {
-            border-color: #764ba2;
-            background: #e8e8ff;
         }
 
         .upload-buttons {
@@ -105,7 +82,6 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
         }
 
         .primary-btn:hover {
@@ -116,22 +92,6 @@
         .primary-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
-        }
-
-        .secondary-btn {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #ddd;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .secondary-btn:hover {
-            background: #e8e8e8;
         }
 
         .file-list {
@@ -145,12 +105,6 @@
         .file-list p {
             margin: 8px 0;
             color: #333;
-            font-size: 14px;
-        }
-
-        .file-list span {
-            color: #667eea;
-            font-weight: 600;
         }
 
         input[type="file"] {
@@ -161,119 +115,11 @@
             display: none;
         }
 
-        .layout {
-            display: flex;
-            gap: 20px;
-        }
-
-        .filters-sidebar {
-            width: 250px;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-
-        .filters-sidebar.hidden {
-            display: none;
-        }
-
-        .filter-block {
-            margin-bottom: 20px;
-        }
-
-        .filter-block label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .checkbox-list {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .checkbox-list label {
-            display: flex;
-            align-items: center;
-            font-weight: 400;
-            margin-bottom: 8px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .checkbox-list input[type="checkbox"] {
-            display: inline;
-            margin-right: 8px;
-            cursor: pointer;
-            width: auto;
-        }
-
-        .main-content {
-            flex: 1;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 20px;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        table thead {
-            background: #667eea;
-            color: white;
-        }
-
-        table th {
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
-        }
-
-        table tbody tr:hover {
-            background: #f9f9f9;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
         .message {
             padding: 12px;
             border-radius: 4px;
             margin-bottom: 20px;
             display: none;
-            font-size: 14px;
         }
 
         .message.show {
@@ -292,17 +138,10 @@
             border-left: 4px solid #c62828;
         }
 
-        .message.info {
-            background: #bbdefb;
-            color: #1565c0;
-            border-left: 4px solid #1565c0;
-        }
-
         #loading {
             text-align: center;
             padding: 40px;
             background: white;
-            border-radius: 8px;
         }
 
         .spinner {
@@ -321,19 +160,33 @@
             100% { transform: rotate(360deg); }
         }
 
-        @media (max-width: 1024px) {
-            .layout {
-                flex-direction: column;
-            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
 
-            .filters-sidebar {
-                width: 100%;
-                position: static;
-            }
+        table thead {
+            background: #667eea;
+            color: white;
+        }
 
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
+        table th, table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
         .footer {
@@ -344,7 +197,6 @@
         }
     </style>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
@@ -358,11 +210,8 @@
     <main>
         <div id="message" class="message"></div>
 
-        <button id="toggle-filtros" class="toggle-btn">📊 Mostrar filtros</button>
-
-        <!-- UPLOAD SECTION -->
         <section class="card upload-card">
-            <div id="drop-zone" class="drop-zone">
+            <div class="drop-zone" id="drop-zone">
                 📁 Arraste os arquivos aqui
             </div>
 
@@ -382,96 +231,14 @@
             <button id="process-btn" class="primary-btn" disabled>🚀 Processar Arquivos</button>
         </section>
 
-        <!-- LOADING -->
         <section id="loading" class="card hidden">
             <div class="spinner"></div>
             Processando arquivos, aguarde...
         </section>
 
-        <!-- RESULTS -->
-        <section id="results" class="hidden">
-            <div class="layout">
-                <!-- FILTERS -->
-                <aside id="filters-section" class="filters-sidebar card hidden">
-                    <h2>🔍 Filtros</h2>
-                    <button id="minimize-filters" class="secondary-btn">⮜ Minimizar</button>
-
-                    <div class="filter-block">
-                        <label>Estação de teste</label>
-                        <div id="filter-estacao" class="checkbox-list"></div>
-                    </div>
-
-                    <div class="filter-block">
-                        <label>Linha</label>
-                        <div id="filter-linha" class="checkbox-list"></div>
-                    </div>
-
-                    <div class="filter-block">
-                        <label>Descrição Ajustada</label>
-                        <div id="filter-descricao-ajustada" class="checkbox-list"></div>
-                    </div>
-
-                    <button id="clear-filters-btn" class="secondary-btn">✖ Limpar filtros</button>
-                </aside>
-
-                <!-- MAIN CONTENT -->
-                <section class="main-content">
-                    <div class="cards-grid">
-                        <section class="card">
-                            <h2>📋 Resumo por Estação</h2>
-                            <div class="table-wrapper">
-                                <table id="resumo-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Estação</th>
-                                            <th>Board Pass</th>
-                                            <th>Board Fail</th>
-                                            <th>Total</th>
-                                            <th>Taxa Defeito (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="charts-grid">
-                        <section class="card">
-                            <h2>📊 Pareto - Causas (Descrição.1)</h2>
-                            <div class="chart-container">
-                                <canvas id="paretoCausaChart"></canvas>
-                            </div>
-                        </section>
-
-                        <section class="card">
-                            <h2>📊 Falhas por Estação</h2>
-                            <div class="chart-container">
-                                <canvas id="pieEstacaoChart"></canvas>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="cards-grid">
-                        <section class="card">
-                            <h2>📄 Falhas (Preview)</h2>
-                            <div class="table-wrapper">
-                                <table id="falhas-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Serial</th>
-                                            <th>Estação</th>
-                                            <th>Descrição Ajustada</th>
-                                            <th>Causa (Descrição.1)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-                </section>
-            </div>
+        <section id="results" class="card hidden">
+            <h2>📋 Resultados</h2>
+            <div id="results-content"></div>
         </section>
     </main>
 
@@ -479,6 +246,129 @@
         © 2025 BIP-QA System | Hosted on Railway + GitHub Pages
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        const API_URL = "https://web-production-cf763.up.railway.app";
+
+        let falhasFile = null;
+        let outputFile = null;
+
+        const btnSelectFalhas = document.getElementById('btn-select-falhas');
+        const btnSelectOutput = document.getElementById('btn-select-output');
+        const fileInputFalhas = document.getElementById('file-input-falhas');
+        const fileInputOutput = document.getElementById('file-input-output');
+        const processBtn = document.getElementById('process-btn');
+        const messageDiv = document.getElementById('message');
+        const loadingSection = document.getElementById('loading');
+        const resultsSection = document.getElementById('results');
+        const dropZone = document.getElementById('drop-zone');
+
+        btnSelectFalhas.addEventListener('click', () => fileInputFalhas.click());
+        btnSelectOutput.addEventListener('click', () => fileInputOutput.click());
+
+        fileInputFalhas.addEventListener('change', (e) => {
+            falhasFile = e.target.files[0];
+            document.getElementById('falhas-name').textContent = falhasFile?.name || 'Nenhum arquivo selecionado';
+            updateProcessBtn();
+        });
+
+        fileInputOutput.addEventListener('change', (e) => {
+            outputFile = e.target.files[0];
+            document.getElementById('output-name').textContent = outputFile?.name || 'Nenhum arquivo selecionado';
+            updateProcessBtn();
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#764ba2';
+            dropZone.style.background = '#e8e8ff';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = '#667eea';
+            dropZone.style.background = '#f8f9ff';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#667eea';
+            dropZone.style.background = '#f8f9ff';
+            
+            const files = e.dataTransfer.files;
+            for (let file of files) {
+                if (file.name.toLowerCase().includes('falha')) {
+                    falhasFile = file;
+                    document.getElementById('falhas-name').textContent = file.name;
+                } else if (file.name.toLowerCase().includes('output')) {
+                    outputFile = file;
+                    document.getElementById('output-name').textContent = file.name;
+                }
+            }
+            updateProcessBtn();
+        });
+
+        function updateProcessBtn() {
+            processBtn.disabled = !falhasFile || !outputFile;
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type} show`;
+            setTimeout(() => messageDiv.classList.remove('show'), 5000);
+        }
+
+        processBtn.addEventListener('click', async () => {
+            if (!falhasFile || !outputFile) {
+                showMessage('Por favor selecione ambos os arquivos', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('falhas', falhasFile);
+            formData.append('output', outputFile);
+
+            loadingSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+
+            try {
+                const response = await fetch(`${API_URL}/processar`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.erro || 'Erro ao processar');
+                }
+
+                displayResults(data);
+                showMessage('✅ Arquivos processados com sucesso!', 'success');
+                loadingSection.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Erro:', error);
+                showMessage(`❌ Erro: ${error.message}`, 'error');
+                loadingSection.classList.add('hidden');
+            }
+        });
+
+        function displayResults(data) {
+            let html = '<h3>Dados Processados</h3>';
+            html += `<p>Total de falhas: ${data.total_falhas}</p>`;
+            html += `<p>Total de output: ${data.total_output}</p>`;
+            
+            if (data.falhas_rows && data.falhas_rows.length > 0) {
+                html += '<h3>Amostra de Falhas</h3>';
+                html += '<table><thead><tr><th>Serial</th><th>Estação</th><th>Descrição</th></tr></thead><tbody>';
+                data.falhas_rows.slice(0, 10).forEach(row => {
+                    html += `<tr><td>${row.Serial || '-'}</td><td>${row.Estacao_Ajustada || '-'}</td><td>${row.Descricao_Ajustada || '-'}</td></tr>`;
+                });
+                html += '</tbody></table>';
+            }
+
+            document.getElementById('results-content').innerHTML = html;
+        }
+    </script>
 </body>
 </html>
