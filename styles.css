@@ -218,6 +218,50 @@ button:active {
   color: #003f7f;
 }
 
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #003f7f;
+  cursor: pointer;
+  padding: 6px 0;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.filter-header:hover {
+  color: #0078d4;
+}
+
+.filter-toggle {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 10px;
+}
+
+.filter-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.filter-search {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+
+.filter-search:focus {
+  outline: none;
+  border-color: #0078d4;
+  background: #f0f7ff;
+}
+
 .checkbox-list {
   border: 1px solid #cbd5e0;
   border-radius: 6px;
@@ -225,6 +269,23 @@ button:active {
   padding: 6px 8px;
   max-height: 140px;
   overflow-y: auto;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.checkbox-list.collapsed {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0 8px;
+}
+
+.filter-block > label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #003f7f;
 }
 
 .checkbox-list::-webkit-scrollbar {

@@ -59,37 +59,65 @@
                     <button id="clear-filters-btn" class="secondary-btn" style="width: 100%; margin-bottom: 10px;">✖ Limpar Tudo</button>
 
                     <div class="filter-block">
-                        <label>Estação</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-estacao')">
+                            <span>📍 Estação</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-estacao', this.value)">
                         <div id="filter-estacao" class="checkbox-list"></div>
                     </div>
 
                     <div class="filter-block">
-                        <label>Linha</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-linha')">
+                            <span>📋 Linha</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-linha', this.value)">
                         <div id="filter-linha" class="checkbox-list"></div>
                     </div>
 
                     <div class="filter-block">
-                        <label>Work Order</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-wo')">
+                            <span>📦 Work Order</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-wo', this.value)">
                         <div id="filter-wo" class="checkbox-list"></div>
                     </div>
 
                     <div class="filter-block">
-                        <label>Modelo</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-modelo')">
+                            <span>🏭 Modelo</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-modelo', this.value)">
                         <div id="filter-modelo" class="checkbox-list"></div>
                     </div>
 
                     <div class="filter-block">
-                        <label>Descrição</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-descricao')">
+                            <span>📝 Descrição</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-descricao', this.value)">
                         <div id="filter-descricao" class="checkbox-list"></div>
                     </div>
 
                     <div class="filter-block">
-                        <label>Item (Componente)</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-item')">
+                            <span>🔧 Item (Componente)</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-item', this.value)">
                         <div id="filter-item" class="checkbox-list"></div>
                     </div>
 
                     <div class="filter-block">
-                        <label>Data</label>
+                        <label class="filter-header" onclick="toggleFilter('filter-data')">
+                            <span>📅 Data</span>
+                            <span class="filter-toggle">▼</span>
+                        </label>
+                        <input type="text" class="filter-search" placeholder="Buscar..." onkeyup="filtrarCheckboxes('filter-data', this.value)">
                         <div id="filter-data" class="checkbox-list"></div>
                     </div>
                 </aside>
@@ -224,6 +252,28 @@
         const pivotModeloBody = document.querySelector("#pivot-modelo-table tbody");
 
         Chart.register(ChartDataLabels);
+
+        // ========== FUNÇÕES DE FILTRO ==========
+        function toggleFilter(filterId) {
+            const container = document.getElementById(filterId);
+            const header = event.currentTarget.querySelector('.filter-toggle');
+            container.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+        }
+
+        function filtrarCheckboxes(filterId, termo) {
+            const container = document.getElementById(filterId);
+            const labels = container.querySelectorAll('label');
+            
+            labels.forEach(label => {
+                const texto = label.textContent.toLowerCase();
+                if (texto.includes(termo.toLowerCase())) {
+                    label.style.display = 'flex';
+                } else {
+                    label.style.display = 'none';
+                }
+            });
+        }
 
         // ========== FILE UPLOAD ==========
         btnSelectFalhas.addEventListener('click', () => fileInputFalhas.click());
