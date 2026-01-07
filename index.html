@@ -8,294 +8,403 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
     <style>
+        /* ===========================
+           BASE
+           =========================== */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+          box-sizing: border-box;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Arial, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
+          margin: 0;
+          background: #f3f5f9;
+          color: #222;
+          font-size: 13px;
         }
 
+        /* ===========================
+           HEADER
+           =========================== */
         header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
+          background: #003f7f;
+          color: #fff;
+          padding: 15px 25px;
         }
 
         header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
+          margin: 0;
+          font-size: 20px;
         }
 
+        header p {
+          margin: 4px 0 0;
+          font-size: 12px;
+        }
+
+        /* ===========================
+           LAYOUT PRINCIPAL
+           =========================== */
         main {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .primary-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .primary-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .secondary-btn {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #ddd;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .secondary-btn:hover {
-            background: #e8e8e8;
-        }
-
-        .upload-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .drop-zone {
-            border: 2px dashed #667eea;
-            border-radius: 8px;
-            padding: 40px 20px;
-            margin-bottom: 20px;
-            background: #f8f9ff;
-            cursor: pointer;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .file-list {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-
-        .file-list p {
-            margin: 8px 0;
-            color: #333;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .hidden {
-            display: none;
+          max-width: 1800px;
+          margin: 0 auto;
+          padding: 20px;
         }
 
         .layout {
-            display: flex;
-            gap: 20px;
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
         }
 
-        .filters-sidebar {
-            width: 280px;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+        /* ===========================
+           CARDS
+           =========================== */
+        .card {
+          background: #fff;
+          padding: 16px 18px;
+          border-radius: 10px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+          margin-bottom: 16px;
         }
 
-        .filters-sidebar.hidden {
-            display: none;
+        .card h2 {
+          margin: 0 0 12px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #003f7f;
         }
 
-        .filter-block {
-            margin-bottom: 20px;
+        /* ===========================
+           UPLOAD
+           =========================== */
+        .upload-card {
+          margin-bottom: 16px;
         }
 
-        .filter-block > label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 14px;
+        .drop-zone {
+          border: 2px dashed #0078d4;
+          background: #f0f7ff;
+          border-radius: 10px;
+          padding: 18px;
+          text-align: center;
+          font-size: 12px;
+          position: relative;
+          cursor: pointer;
+          margin-bottom: 8px;
+          transition: background 0.15s ease, border-color 0.15s ease;
         }
 
-        .checkbox-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            padding: 8px;
-            border-radius: 4px;
-            background: #fafafa;
+        .drop-zone.dragover {
+          background: #dbeafe;
+          border-color: #005a9e;
         }
 
-        .checkbox-list label {
-            display: flex;
-            align-items: center;
-            font-weight: 400;
-            margin-bottom: 6px;
-            cursor: pointer;
-            font-size: 12px;
+        .file-list p {
+          margin: 4px 0;
+          font-size: 12px;
         }
 
-        .checkbox-list input[type="checkbox"] {
-            margin-right: 8px;
-            cursor: pointer;
-            width: auto;
+        .file-list span {
+          color: #0078d4;
+          font-weight: 600;
         }
 
-        .main-content {
-            flex: 1;
+        input[type="file"] {
+          display: none;
         }
 
-        .table-wrapper {
-            overflow-x: auto;
+        /* ===========================
+           BOTÕES
+           =========================== */
+        button {
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 600;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
+        .upload-buttons {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
         }
 
-        table thead {
-            background: #667eea;
-            color: white;
+        .primary-btn {
+          padding: 8px 14px;
+          background: #0078d4;
+          color: #fff;
+          flex: 1;
+          min-width: 140px;
         }
 
-        table th, table td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
+        .primary-btn:hover:not(:disabled) {
+          background: #005a9e;
         }
 
-        table tbody tr:hover {
-            background: #f9f9f9;
+        .primary-btn:disabled {
+          background: #a0aec0;
+          cursor: not-allowed;
         }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-            cursor: pointer;
+        #process-btn {
+          width: 100%;
+          padding: 10px;
+          margin-top: 8px;
+          background: #0078d4;
+          color: #fff;
         }
 
-        h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 16px;
+        #process-btn:hover:not(:disabled) {
+          background: #005a9e;
         }
 
-        .message {
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            display: none;
+        .secondary-btn {
+          background: #e2e8f0;
+          color: #1a202c;
+          padding: 6px 12px;
+          border: 1px solid #cbd5e0;
         }
 
-        .message.show {
-            display: block;
-        }
-
-        .message.success {
-            background: #c8e6c9;
-            color: #2e7d32;
-            border-left: 4px solid #2e7d32;
-        }
-
-        .message.error {
-            background: #ffcdd2;
-            color: #c62828;
-            border-left: 4px solid #c62828;
-        }
-
-        #loading {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .footer {
-            text-align: center;
-            color: white;
-            margin-top: 30px;
-            font-size: 12px;
+        .secondary-btn:hover {
+          background: #cbd5e0;
         }
 
         .toggle-btn {
-            background: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          background: #003f7f;
+          color: #fff;
+          padding: 8px 16px;
+          margin-bottom: 12px;
+          width: 100%;
         }
 
-        @media (max-width: 1200px) {
-            .layout {
-                flex-direction: column;
-            }
+        /* ===========================
+           SIDEBAR DE FILTROS
+           =========================== */
+        .filters-sidebar {
+          width: 280px;
+          flex-shrink: 0;
+        }
 
-            .filters-sidebar {
-                width: 100%;
-                position: static;
-            }
+        .filters-sidebar.hidden {
+          display: none;
+        }
 
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
+        .filter-block {
+          margin-bottom: 12px;
+        }
+
+        .filter-block > label {
+          display: block;
+          font-size: 12px;
+          font-weight: 600;
+          margin-bottom: 4px;
+          color: #003f7f;
+        }
+
+        .checkbox-list {
+          border: 1px solid #cbd5e0;
+          border-radius: 6px;
+          background: #fff;
+          padding: 6px 8px;
+          max-height: 140px;
+          overflow-y: auto;
+        }
+
+        .checkbox-list label {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          padding: 2px 0;
+        }
+
+        .checkbox-list input[type="checkbox"] {
+          width: 14px;
+          height: 14px;
+          cursor: pointer;
+        }
+
+        #clear-filters-btn {
+          width: 100%;
+          padding: 6px;
+          margin-bottom: 10px;
+        }
+
+        /* ===========================
+           CONTEÚDO PRINCIPAL
+           =========================== */
+        .main-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .cards-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+
+        .charts-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+
+        /* ===========================
+           GRÁFICOS
+           =========================== */
+        .chart-container {
+          position: relative;
+          height: 280px;
+          padding: 12px 8px 4px;
+        }
+
+        .chart-container canvas {
+          width: 100% !important;
+          height: 100% !important;
+          display: block;
+        }
+
+        /* ===========================
+           TABELAS
+           =========================== */
+        .table-wrapper {
+          max-height: 280px;
+          overflow-y: auto;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          table-layout: fixed;
+          font-size: 11px;
+        }
+
+        th, td {
+          border: 1px solid #cbd5e0;
+          padding: 6px 8px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        thead {
+          background: #edf2f7;
+          font-weight: 600;
+          position: sticky;
+          top: 0;
+        }
+
+        tbody tr:hover {
+          background: #f8fafc;
+        }
+
+        /* Cores para FPY e Taxa */
+        td[data-fpy-good] {
+          background: #dcfce7;
+          color: #166534;
+          font-weight: 600;
+        }
+
+        td[data-fpy-bad] {
+          background: #fee2e2;
+          color: #991b1b;
+          font-weight: 600;
+        }
+
+        td[data-taxa-high] {
+          background: #fee2e2;
+          color: #991b1b;
+          font-weight: 600;
+        }
+
+        /* ===========================
+           MENSAGENS
+           =========================== */
+        .message {
+          display: none;
+          padding: 10px 14px;
+          border-radius: 6px;
+          margin-bottom: 12px;
+          font-size: 12px;
+        }
+
+        .message.show {
+          display: block;
+        }
+
+        .message.success {
+          background: #dcfce7;
+          color: #166534;
+          border-left: 4px solid #22c55e;
+        }
+
+        .message.error {
+          background: #fee2e2;
+          color: #991b1b;
+          border-left: 4px solid #ef4444;
+        }
+
+        #loading {
+          text-align: center;
+          padding: 30px;
+        }
+
+        .spinner {
+          display: inline-block;
+          width: 18px;
+          height: 18px;
+          border: 3px solid #cbd5e0;
+          border-top-color: #0078d4;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+          margin-right: 10px;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+          display: none;
+        }
+
+        /* ===========================
+           RESPONSIVO
+           =========================== */
+        @media (max-width: 1300px) {
+          .layout {
+            flex-direction: column;
+          }
+
+          .filters-sidebar {
+            width: 100%;
+          }
+
+          .cards-grid,
+          .charts-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .charts-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        /* ===========================
+           AJUSTES FINAIS
+           =========================== */
+        #falhas-table th:nth-child(1),
+        #falhas-table td:nth-child(1) {
+          max-width: 120px;
         }
     </style>
 </head>
@@ -303,37 +412,37 @@
 
     <header>
         <h1>🔧 BIP QA - Falhas x Output</h1>
-        <p>Sistema de análise de falhas e output com gráficos interativos</p>
+        <p>Sistema de análise com gráficos interativos e filtros avançados</p>
     </header>
 
     <main>
         <div id="message" class="message"></div>
 
-        <button id="toggle-filtros" class="toggle-btn">📊 Mostrar filtros</button>
+        <button id="toggle-filtros" class="toggle-btn">📊 Mostrar Filtros</button>
 
         <!-- UPLOAD -->
-        <section class="card">
+        <section class="card upload-card">
             <div class="drop-zone" id="drop-zone">📁 Arraste os arquivos aqui</div>
 
             <div class="upload-buttons">
-                <button id="btn-select-falhas" class="primary-btn">📄 Selecionar Falhas.xlsx</button>
-                <button id="btn-select-output" class="primary-btn">📊 Selecionar Output.xlsx</button>
+                <button id="btn-select-falhas" class="primary-btn">📄 Falhas</button>
+                <button id="btn-select-output" class="primary-btn">📊 Output</button>
             </div>
 
             <input id="file-input-falhas" type="file" accept=".xlsx" />
             <input id="file-input-output" type="file" accept=".xlsx" />
 
             <div class="file-list">
-                <p><strong>Falhas:</strong> <span id="falhas-name">Nenhum arquivo</span></p>
-                <p><strong>Output:</strong> <span id="output-name">Nenhum arquivo</span></p>
+                <p>📄 Falhas: <span id="falhas-name">Nenhum</span></p>
+                <p>📊 Output: <span id="output-name">Nenhum</span></p>
             </div>
 
-            <button id="process-btn" class="primary-btn" disabled>🚀 Processar Arquivos</button>
+            <button id="process-btn" class="primary-btn" disabled>🚀 Processar</button>
         </section>
 
         <!-- LOADING -->
         <section id="loading" class="card hidden">
-            <div class="spinner"></div> Processando...
+            <div class="spinner"></div> Processando arquivos...
         </section>
 
         <!-- RESULTS -->
@@ -342,10 +451,10 @@
                 <!-- FILTROS -->
                 <aside class="filters-sidebar card hidden" id="filters-section">
                     <h2>🔍 Filtros</h2>
-                    <button class="secondary-btn" id="clear-filters-btn" style="width: 100%; margin-bottom: 10px;">✖ Limpar Tudo</button>
+                    <button id="clear-filters-btn" class="secondary-btn">✖ Limpar Tudo</button>
 
                     <div class="filter-block">
-                        <label>Estação de teste</label>
+                        <label>Estação</label>
                         <div id="filter-estacao" class="checkbox-list"></div>
                     </div>
 
@@ -365,7 +474,7 @@
                     </div>
 
                     <div class="filter-block">
-                        <label>Descrição Ajustada</label>
+                        <label>Descrição</label>
                         <div id="filter-descricao" class="checkbox-list"></div>
                     </div>
 
@@ -380,40 +489,57 @@
                     </div>
                 </aside>
 
-                <!-- CONTEÚDO PRINCIPAL -->
+                <!-- CONTEÚDO -->
                 <section class="main-content">
-                    <!-- TABELA RESUMO -->
-                    <section class="card">
-                        <h2>📋 Resumo por Estação</h2>
-                        <div class="table-wrapper">
-                            <table id="resumo-table">
-                                <thead>
-                                    <tr>
-                                        <th>Estação</th>
-                                        <th>Data</th>
-                                        <th>Board Pass</th>
-                                        <th>Board Fail</th>
-                                        <th>Total</th>
-                                        <th>Taxa Defeito (%)</th>
-                                        <th>FPY (%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </section>
+                    <!-- RESUMO + TABELA MODELO -->
+                    <div class="cards-grid">
+                        <section class="card">
+                            <h2>📋 Resumo por Estação</h2>
+                            <div class="table-wrapper">
+                                <table id="resumo-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Estação</th>
+                                            <th>Data</th>
+                                            <th>Pass</th>
+                                            <th>Fail</th>
+                                            <th>Total</th>
+                                            <th>Taxa %</th>
+                                            <th>FPY %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>📊 Modelos</h2>
+                            <div class="table-wrapper">
+                                <table id="pivot-modelo-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Modelo</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
 
                     <!-- GRÁFICOS -->
                     <div class="charts-grid">
                         <section class="card">
-                            <h2>📊 Pareto - Causas (Descrição.1)</h2>
+                            <h2>📊 Pareto - Causas (com % Acumulado)</h2>
                             <div class="chart-container">
                                 <canvas id="paretoCausaChart"></canvas>
                             </div>
                         </section>
 
                         <section class="card">
-                            <h2>📊 Pareto - Itens (Componentes)</h2>
+                            <h2>📊 Pareto - Itens (com % Acumulado)</h2>
                             <div class="chart-container">
                                 <canvas id="paretoItemChart"></canvas>
                             </div>
@@ -427,23 +553,23 @@
                         </section>
 
                         <section class="card">
-                            <h2>📊 Pivô - Modelos</h2>
+                            <h2>📊 Distribuição de Modelos</h2>
                             <div class="chart-container">
                                 <canvas id="pieModeloChart"></canvas>
                             </div>
                         </section>
                     </div>
 
-                    <!-- TABELA FALHAS -->
+                    <!-- TABELA FALHAS PREVIEW -->
                     <section class="card">
-                        <h2>📄 Falhas (Preview - 100 primeiras)</h2>
+                        <h2>📄 Falhas (Preview - 50 primeiras)</h2>
                         <div class="table-wrapper">
                             <table id="falhas-table">
                                 <thead>
                                     <tr>
                                         <th>Serial</th>
                                         <th>Estação</th>
-                                        <th>Descrição Ajustada</th>
+                                        <th>Descrição</th>
                                         <th>Causa</th>
                                         <th>Item</th>
                                     </tr>
@@ -456,10 +582,6 @@
             </div>
         </section>
     </main>
-
-    <div class="footer">
-        © 2025 BIP-QA System | Railway + GitHub Pages
-    </div>
 
     <script>
         const API_URL = "https://web-production-cf763.up.railway.app";
@@ -494,6 +616,7 @@
 
         const resumoTableBody = document.querySelector("#resumo-table tbody");
         const falhasTableBody = document.querySelector("#falhas-table tbody");
+        const pivotModeloBody = document.querySelector("#pivot-modelo-table tbody");
 
         Chart.register(ChartDataLabels);
 
@@ -517,19 +640,19 @@
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = '#764ba2';
-            dropZone.style.background = '#e8e8ff';
+            dropZone.style.borderColor = '#005a9e';
+            dropZone.style.background = '#dbeafe';
         });
 
         dropZone.addEventListener('dragleave', () => {
-            dropZone.style.borderColor = '#667eea';
-            dropZone.style.background = '#f8f9ff';
+            dropZone.style.borderColor = '#0078d4';
+            dropZone.style.background = '#f0f7ff';
         });
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = '#667eea';
-            dropZone.style.background = '#f8f9ff';
+            dropZone.style.borderColor = '#0078d4';
+            dropZone.style.background = '#f0f7ff';
             
             const files = e.dataTransfer.files;
             for (let file of files) {
@@ -553,7 +676,7 @@
         // ========== TOGGLE FILTROS ==========
         toggleFiltrosBtn.addEventListener('click', () => {
             filtersSidebar.classList.toggle('hidden');
-            toggleFiltrosBtn.textContent = filtersSidebar.classList.contains('hidden') ? '📊 Mostrar filtros' : '📊 Ocultar filtros';
+            toggleFiltrosBtn.textContent = filtersSidebar.classList.contains('hidden') ? '📊 Mostrar Filtros' : '📊 Ocultar Filtros';
         });
 
         // ========== PROCESSAR ==========
@@ -706,6 +829,7 @@
             }
 
             desenharResumo(falhasFiltradas, outputFiltrado);
+            desenharPivotModelo(outputFiltrado);
             desenharGraficoPareto(falhasFiltradas, 'Descrição.1', 'paretoCausaChart', 'causa');
             desenharGraficoPareto(falhasFiltradas, 'Item', 'paretoItemChart', 'item');
             desenharGraficoPizza(falhasFiltradas, 'Estacao_Ajustada', 'pieEstacaoChart', 'estacao');
@@ -729,23 +853,52 @@
                 estacoes[est].fail = (estacoes[est].fail || 0) + 1;
             });
 
-            Object.entries(estacoes).forEach(([est, dados]) => {
+            Object.entries(estacoes).sort().forEach(([est, dados]) => {
                 const fail = dados.fail || 0;
                 const total = dados.pass;
                 const taxa = total > 0 ? ((fail / total) * 100).toFixed(2) : '0.00';
                 const fpy = (100 - taxa).toFixed(2);
 
                 const tr = document.createElement('tr');
+                const taxaTd = document.createElement('td');
+                taxaTd.textContent = taxa + '%';
+                if (taxa > 2) taxaTd.setAttribute('data-taxa-high', '');
+
+                const fpyTd = document.createElement('td');
+                fpyTd.textContent = fpy + '%';
+                if (fpy >= 99) fpyTd.setAttribute('data-fpy-good', '');
+                else fpyTd.setAttribute('data-fpy-bad', '');
+
                 tr.innerHTML = `
                     <td>${est}</td>
                     <td>${dados.data || ''}</td>
                     <td>${dados.pass}</td>
                     <td>${fail}</td>
                     <td>${total}</td>
-                    <td style="${taxa > 2 ? 'background: #ffcccc; color: #cc0000; font-weight: bold;' : ''}">${taxa}%</td>
-                    <td style="${fpy >= 99 ? 'background: #ccffcc; color: #00cc00; font-weight: bold;' : 'background: #ffcccc; color: #cc0000; font-weight: bold;'}">${fpy}%</td>
                 `;
+                tr.appendChild(taxaTd);
+                tr.appendChild(fpyTd);
                 resumoTableBody.appendChild(tr);
+            });
+        }
+
+        function desenharPivotModelo(output) {
+            pivotModeloBody.innerHTML = '';
+            const map = {};
+            output.forEach(o => {
+                const modelo = o['Nome do Modelo'] || 'SEM MODELO';
+                map[modelo] = (map[modelo] || 0) + parseInt(o.Total || 0);
+            });
+
+            Object.entries(map).sort((a, b) => b[1] - a[1]).forEach(([modelo, total]) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${modelo}</td><td>${total}</td>`;
+                tr.style.cursor = 'pointer';
+                tr.addEventListener('click', () => {
+                    filtroCliqueModelo = filtroCliqueModelo === modelo ? null : modelo;
+                    recomputarTudo();
+                });
+                pivotModeloBody.appendChild(tr);
             });
         }
 
@@ -757,6 +910,14 @@
             });
 
             const ordenada = Object.entries(cont).sort((a, b) => b[1] - a[1]).slice(0, 10);
+            const total = ordenada.reduce((s, x) => s + x[1], 0);
+
+            let acum = 0;
+            const percAcum = [];
+            ordenada.forEach(x => {
+                acum += x[1];
+                percAcum.push((acum / total) * 100);
+            });
 
             if (charts[tipo]) charts[tipo].destroy();
             const ctx = document.getElementById(canvasId).getContext('2d');
@@ -765,19 +926,56 @@
                 type: 'bar',
                 data: {
                     labels: ordenada.map(c => c[0]),
-                    datasets: [{
-                        label: 'Qtd Falhas',
-                        data: ordenada.map(c => c[1]),
-                        backgroundColor: '#667eea',
-                        borderColor: '#764ba2',
-                        borderWidth: 1
-                    }]
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Qtd Falhas',
+                            data: ordenada.map(c => c[1]),
+                            backgroundColor: '#0078d4',
+                            borderColor: '#003f7f',
+                            borderWidth: 1,
+                            yAxisID: 'y',
+                            order: 1
+                        },
+                        {
+                            type: 'line',
+                            label: '% Acumulado',
+                            data: percAcum,
+                            borderColor: '#ff6b6b',
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#ff6b6b',
+                            yAxisID: 'y1',
+                            order: 0
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: true } },
-                    scales: { y: { beginAtZero: true } },
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            max: 115,
+                            ticks: { callback: v => v + '%' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    },
                     onClick: (evt, elements) => {
                         if (!elements.length) return;
                         const idx = elements[0].index;
@@ -810,7 +1008,7 @@
                     labels: Object.keys(cont),
                     datasets: [{
                         data: Object.values(cont),
-                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140']
+                        backgroundColor: ['#0078d4', '#0063b1', '#004b8a', '#003f7f', '#667eea', '#764ba2', '#f093fb']
                     }]
                 },
                 options: {
@@ -836,7 +1034,7 @@
 
         function desenharFalhasPreview(falhas) {
             falhasTableBody.innerHTML = '';
-            falhas.slice(0, 100).forEach(f => {
+            falhas.slice(0, 50).forEach(f => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${f.Serial || '-'}</td>
@@ -852,7 +1050,7 @@
         function showMessage(text, type) {
             messageDiv.textContent = text;
             messageDiv.className = `message ${type} show`;
-            setTimeout(() => messageDiv.classList.remove('show'), 5000);
+            setTimeout(() => messageDiv.classList.remove('show'), 4000);
         }
     </script>
 </body>
