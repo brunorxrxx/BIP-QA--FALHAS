@@ -1,4 +1,10 @@
 // ===============================
+// CONFIGURAÇÃO DE API - RAILWAY
+// ===============================
+// ⚠️ ALTERE ISSO PARA SUA URL DO RAILWAY
+const API_URL = 'https://seu-url-railway.up.railway.app';
+
+// ===============================
 // ELEMENTOS BÁSICOS
 // ===============================
 const dropZone = document.getElementById("drop-zone");
@@ -145,12 +151,16 @@ processBtn.addEventListener("click", async () => {
         formData.append("falhas", falhasFile);
         formData.append("output", outputFile);
 
-        const resp = await fetch("http://127.0.0.1:8000/processar", {
+        // ⭐ AGORA USA API_URL (Railway) AO INVÉS DE LOCALHOST
+        const resp = await fetch(`${API_URL}/processar`, {
             method: "POST",
             body: formData,
         });
 
-        if (!resp.ok) throw new Error("Erro ao processar arquivos");
+        if (!resp.ok) {
+            const errorData = await resp.json();
+            throw new Error(errorData.erro || "Erro ao processar arquivos");
+        }
 
         const data = await resp.json();
         falhasRows = data.falhas_rows || [];
@@ -169,8 +179,8 @@ processBtn.addEventListener("click", async () => {
         filtersSection.classList.remove("hidden");
 
     } catch (e) {
-        console.error(e);
-        alert("Falha ao processar arquivos. Verifique o backend.");
+        console.error("Erro:", e);
+        alert(`Erro ao processar arquivos:\n${e.message}\n\nVerifique se a URL do Railway está correta no app.js`);
         loadingSection.classList.add("hidden");
     }
 });
@@ -204,7 +214,6 @@ if (minimizeFiltersBtn) {
 function extrairHora(dataComHora) {
     if (!dataComHora) return null;
     
-    // Debug
     console.log("Processando data com hora:", dataComHora);
     
     // Formato: "04/12/2025 07:57:46" ou "2025-12-04 07:57:46"
@@ -296,6 +305,7 @@ function preencherFiltros(outputRows, falhasRows) {
     // ⭐ NOVO: ativar botões Selecionar/Desmarcar
     ativarToggleTodos();
 }
+
 // Botão limpar filtros
 if (clearFiltersBtn) {
     clearFiltersBtn.addEventListener("click", () => {
@@ -469,6 +479,7 @@ function recomputarEDesenhar() {
 
     desenharFalhasPreview(falhasFiltradas.slice(0, 200));
 }
+
 function calcularResumoPorEstacao(outputFiltrado, falhasFiltradas) {
     const map = new Map();
 
