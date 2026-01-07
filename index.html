@@ -2,411 +2,13 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BIP QA - Falhas x Output</title>
+
+    <link rel="stylesheet" href="styles.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
-
-    <style>
-        /* ===========================
-           BASE
-           =========================== */
-        * {
-          box-sizing: border-box;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-            Arial, sans-serif;
-        }
-
-        body {
-          margin: 0;
-          background: #f3f5f9;
-          color: #222;
-          font-size: 13px;
-        }
-
-        /* ===========================
-           HEADER
-           =========================== */
-        header {
-          background: #003f7f;
-          color: #fff;
-          padding: 15px 25px;
-        }
-
-        header h1 {
-          margin: 0;
-          font-size: 20px;
-        }
-
-        header p {
-          margin: 4px 0 0;
-          font-size: 12px;
-        }
-
-        /* ===========================
-           LAYOUT PRINCIPAL
-           =========================== */
-        main {
-          max-width: 1800px;
-          margin: 0 auto;
-          padding: 20px;
-        }
-
-        .layout {
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-        }
-
-        /* ===========================
-           CARDS
-           =========================== */
-        .card {
-          background: #fff;
-          padding: 16px 18px;
-          border-radius: 10px;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-          margin-bottom: 16px;
-        }
-
-        .card h2 {
-          margin: 0 0 12px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #003f7f;
-        }
-
-        /* ===========================
-           UPLOAD
-           =========================== */
-        .upload-card {
-          margin-bottom: 16px;
-        }
-
-        .drop-zone {
-          border: 2px dashed #0078d4;
-          background: #f0f7ff;
-          border-radius: 10px;
-          padding: 18px;
-          text-align: center;
-          font-size: 12px;
-          position: relative;
-          cursor: pointer;
-          margin-bottom: 8px;
-          transition: background 0.15s ease, border-color 0.15s ease;
-        }
-
-        .drop-zone.dragover {
-          background: #dbeafe;
-          border-color: #005a9e;
-        }
-
-        .file-list p {
-          margin: 4px 0;
-          font-size: 12px;
-        }
-
-        .file-list span {
-          color: #0078d4;
-          font-weight: 600;
-        }
-
-        input[type="file"] {
-          display: none;
-        }
-
-        /* ===========================
-           BOTÕES
-           =========================== */
-        button {
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 12px;
-          font-weight: 600;
-        }
-
-        .upload-buttons {
-          display: flex;
-          gap: 8px;
-          margin-bottom: 12px;
-          flex-wrap: wrap;
-        }
-
-        .primary-btn {
-          padding: 8px 14px;
-          background: #0078d4;
-          color: #fff;
-          flex: 1;
-          min-width: 140px;
-        }
-
-        .primary-btn:hover:not(:disabled) {
-          background: #005a9e;
-        }
-
-        .primary-btn:disabled {
-          background: #a0aec0;
-          cursor: not-allowed;
-        }
-
-        #process-btn {
-          width: 100%;
-          padding: 10px;
-          margin-top: 8px;
-          background: #0078d4;
-          color: #fff;
-        }
-
-        #process-btn:hover:not(:disabled) {
-          background: #005a9e;
-        }
-
-        .secondary-btn {
-          background: #e2e8f0;
-          color: #1a202c;
-          padding: 6px 12px;
-          border: 1px solid #cbd5e0;
-        }
-
-        .secondary-btn:hover {
-          background: #cbd5e0;
-        }
-
-        .toggle-btn {
-          background: #003f7f;
-          color: #fff;
-          padding: 8px 16px;
-          margin-bottom: 12px;
-          width: 100%;
-        }
-
-        /* ===========================
-           SIDEBAR DE FILTROS
-           =========================== */
-        .filters-sidebar {
-          width: 280px;
-          flex-shrink: 0;
-        }
-
-        .filters-sidebar.hidden {
-          display: none;
-        }
-
-        .filter-block {
-          margin-bottom: 12px;
-        }
-
-        .filter-block > label {
-          display: block;
-          font-size: 12px;
-          font-weight: 600;
-          margin-bottom: 4px;
-          color: #003f7f;
-        }
-
-        .checkbox-list {
-          border: 1px solid #cbd5e0;
-          border-radius: 6px;
-          background: #fff;
-          padding: 6px 8px;
-          max-height: 140px;
-          overflow-y: auto;
-        }
-
-        .checkbox-list label {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 11px;
-          padding: 2px 0;
-        }
-
-        .checkbox-list input[type="checkbox"] {
-          width: 14px;
-          height: 14px;
-          cursor: pointer;
-        }
-
-        #clear-filters-btn {
-          width: 100%;
-          padding: 6px;
-          margin-bottom: 10px;
-        }
-
-        /* ===========================
-           CONTEÚDO PRINCIPAL
-           =========================== */
-        .main-content {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .cards-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
-        }
-
-        .charts-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
-        }
-
-        /* ===========================
-           GRÁFICOS
-           =========================== */
-        .chart-container {
-          position: relative;
-          height: 280px;
-          padding: 12px 8px 4px;
-        }
-
-        .chart-container canvas {
-          width: 100% !important;
-          height: 100% !important;
-          display: block;
-        }
-
-        /* ===========================
-           TABELAS
-           =========================== */
-        .table-wrapper {
-          max-height: 280px;
-          overflow-y: auto;
-        }
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          table-layout: fixed;
-          font-size: 11px;
-        }
-
-        th, td {
-          border: 1px solid #cbd5e0;
-          padding: 6px 8px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        thead {
-          background: #edf2f7;
-          font-weight: 600;
-          position: sticky;
-          top: 0;
-        }
-
-        tbody tr:hover {
-          background: #f8fafc;
-        }
-
-        /* Cores para FPY e Taxa */
-        td[data-fpy-good] {
-          background: #dcfce7;
-          color: #166534;
-          font-weight: 600;
-        }
-
-        td[data-fpy-bad] {
-          background: #fee2e2;
-          color: #991b1b;
-          font-weight: 600;
-        }
-
-        td[data-taxa-high] {
-          background: #fee2e2;
-          color: #991b1b;
-          font-weight: 600;
-        }
-
-        /* ===========================
-           MENSAGENS
-           =========================== */
-        .message {
-          display: none;
-          padding: 10px 14px;
-          border-radius: 6px;
-          margin-bottom: 12px;
-          font-size: 12px;
-        }
-
-        .message.show {
-          display: block;
-        }
-
-        .message.success {
-          background: #dcfce7;
-          color: #166534;
-          border-left: 4px solid #22c55e;
-        }
-
-        .message.error {
-          background: #fee2e2;
-          color: #991b1b;
-          border-left: 4px solid #ef4444;
-        }
-
-        #loading {
-          text-align: center;
-          padding: 30px;
-        }
-
-        .spinner {
-          display: inline-block;
-          width: 18px;
-          height: 18px;
-          border: 3px solid #cbd5e0;
-          border-top-color: #0078d4;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-          margin-right: 10px;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        .hidden {
-          display: none;
-        }
-
-        /* ===========================
-           RESPONSIVO
-           =========================== */
-        @media (max-width: 1300px) {
-          .layout {
-            flex-direction: column;
-          }
-
-          .filters-sidebar {
-            width: 100%;
-          }
-
-          .cards-grid,
-          .charts-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .charts-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        /* ===========================
-           AJUSTES FINAIS
-           =========================== */
-        #falhas-table th:nth-child(1),
-        #falhas-table td:nth-child(1) {
-          max-width: 120px;
-        }
-    </style>
 </head>
 <body>
 
@@ -442,7 +44,8 @@
 
         <!-- LOADING -->
         <section id="loading" class="card hidden">
-            <div class="spinner"></div> Processando arquivos...
+            <div class="spinner"></div>
+            <span>Processando arquivos...</span>
         </section>
 
         <!-- RESULTS -->
@@ -514,7 +117,7 @@
                         </section>
 
                         <section class="card">
-                            <h2>📊 Modelos</h2>
+                            <h2>📊 Modelos (Clique para filtrar)</h2>
                             <div class="table-wrapper">
                                 <table id="pivot-modelo-table">
                                     <thead>
@@ -546,14 +149,14 @@
                         </section>
 
                         <section class="card">
-                            <h2>📊 Falhas por Estação</h2>
+                            <h2>📊 Falhas por Estação (Clique para filtrar)</h2>
                             <div class="chart-container">
                                 <canvas id="pieEstacaoChart"></canvas>
                             </div>
                         </section>
 
                         <section class="card">
-                            <h2>📊 Distribuição de Modelos</h2>
+                            <h2>📊 Distribuição de Modelos (Clique para filtrar)</h2>
                             <div class="chart-container">
                                 <canvas id="pieModeloChart"></canvas>
                             </div>
@@ -640,19 +243,16 @@
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = '#005a9e';
-            dropZone.style.background = '#dbeafe';
+            dropZone.classList.add('dragover');
         });
 
         dropZone.addEventListener('dragleave', () => {
-            dropZone.style.borderColor = '#0078d4';
-            dropZone.style.background = '#f0f7ff';
+            dropZone.classList.remove('dragover');
         });
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = '#0078d4';
-            dropZone.style.background = '#f0f7ff';
+            dropZone.classList.remove('dragover');
             
             const files = e.dataTransfer.files;
             for (let file of files) {
@@ -790,6 +390,7 @@
             let falhasFiltradas = allFalhas;
             let outputFiltrado = allOutput;
 
+            // Aplicar filtros de checkbox
             if (selEstacao.length) {
                 falhasFiltradas = falhasFiltradas.filter(f => selEstacao.includes(f.Estacao_Ajustada));
                 outputFiltrado = outputFiltrado.filter(o => selEstacao.includes(o.Estacao));
@@ -804,6 +405,14 @@
             }
             if (selModelo.length) {
                 outputFiltrado = outputFiltrado.filter(o => selModelo.includes(o['Nome do Modelo']));
+                // Também filtrar falhas baseadas nos modelos selecionados
+                const wosDoModelo = new Set();
+                allOutput.forEach(o => {
+                    if (selModelo.includes(o['Nome do Modelo'])) {
+                        wosDoModelo.add(o['Work Order']);
+                    }
+                });
+                falhasFiltradas = falhasFiltradas.filter(f => wosDoModelo.has(f['Work Order']));
             }
             if (selDescricao.length) {
                 falhasFiltradas = falhasFiltradas.filter(f => selDescricao.includes(f.Descricao_Ajustada));
@@ -815,6 +424,7 @@
                 outputFiltrado = outputFiltrado.filter(o => selData.includes(o.Data));
             }
 
+            // Aplicar filtros por clique
             if (filtroCliqueCausa) {
                 falhasFiltradas = falhasFiltradas.filter(f => (f['Descrição.1'] || 'TBA') === filtroCliqueCausa);
             }
@@ -826,6 +436,14 @@
             }
             if (filtroCliqueModelo) {
                 outputFiltrado = outputFiltrado.filter(o => o['Nome do Modelo'] === filtroCliqueModelo);
+                // Também filtrar falhas baseadas no modelo clicado
+                const wosDoModelo = new Set();
+                allOutput.forEach(o => {
+                    if (o['Nome do Modelo'] === filtroCliqueModelo) {
+                        wosDoModelo.add(o['Work Order']);
+                    }
+                });
+                falhasFiltradas = falhasFiltradas.filter(f => wosDoModelo.has(f['Work Order']));
             }
 
             desenharResumo(falhasFiltradas, outputFiltrado);
@@ -860,6 +478,23 @@
                 const fpy = (100 - taxa).toFixed(2);
 
                 const tr = document.createElement('tr');
+                
+                const estacaoTd = document.createElement('td');
+                estacaoTd.textContent = est;
+                estacaoTd.className = `estacao-${est}`;
+                
+                const dataTd = document.createElement('td');
+                dataTd.textContent = dados.data || '';
+                
+                const passTd = document.createElement('td');
+                passTd.textContent = dados.pass;
+                
+                const failTd = document.createElement('td');
+                failTd.textContent = fail;
+                
+                const totalTd = document.createElement('td');
+                totalTd.textContent = total;
+                
                 const taxaTd = document.createElement('td');
                 taxaTd.textContent = taxa + '%';
                 if (taxa > 2) taxaTd.setAttribute('data-taxa-high', '');
@@ -869,15 +504,14 @@
                 if (fpy >= 99) fpyTd.setAttribute('data-fpy-good', '');
                 else fpyTd.setAttribute('data-fpy-bad', '');
 
-                tr.innerHTML = `
-                    <td>${est}</td>
-                    <td>${dados.data || ''}</td>
-                    <td>${dados.pass}</td>
-                    <td>${fail}</td>
-                    <td>${total}</td>
-                `;
+                tr.appendChild(estacaoTd);
+                tr.appendChild(dataTd);
+                tr.appendChild(passTd);
+                tr.appendChild(failTd);
+                tr.appendChild(totalTd);
                 tr.appendChild(taxaTd);
                 tr.appendChild(fpyTd);
+                
                 resumoTableBody.appendChild(tr);
             });
         }
@@ -893,7 +527,6 @@
             Object.entries(map).sort((a, b) => b[1] - a[1]).forEach(([modelo, total]) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${modelo}</td><td>${total}</td>`;
-                tr.style.cursor = 'pointer';
                 tr.addEventListener('click', () => {
                     filtroCliqueModelo = filtroCliqueModelo === modelo ? null : modelo;
                     recomputarTudo();
@@ -935,7 +568,13 @@
                             borderColor: '#003f7f',
                             borderWidth: 1,
                             yAxisID: 'y',
-                            order: 1
+                            order: 1,
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: '#003f7f',
+                                font: { weight: 'bold', size: 10 }
+                            }
                         },
                         {
                             type: 'line',
@@ -945,10 +584,17 @@
                             backgroundColor: 'rgba(255, 107, 107, 0.1)',
                             borderWidth: 2,
                             tension: 0.3,
-                            pointRadius: 3,
+                            pointRadius: 4,
                             pointBackgroundColor: '#ff6b6b',
                             yAxisID: 'y1',
-                            order: 0
+                            order: 0,
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: '#ff6b6b',
+                                font: { weight: 'bold', size: 9 },
+                                formatter: (value) => value.toFixed(1) + '%'
+                            }
                         }
                     ]
                 },
@@ -958,7 +604,9 @@
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { display: true, position: 'top' },
-                        datalabels: { display: false }
+                        datalabels: {
+                            display: true
+                        }
                     },
                     scales: {
                         y: {
