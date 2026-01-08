@@ -227,6 +227,38 @@
 
     <script>
         const API_URL = "https://web-production-cf763.up.railway.app";
+        let MODO_OFFLINE = false;
+        let BACKEND_LOCAL = "http://localhost:8000";
+
+        // ========== DETECTAR INTERNET ==========
+        function detectarInternet() {
+            fetch(API_URL, { mode: 'no-cors' })
+                .then(() => {
+                    MODO_OFFLINE = false;
+                    console.log('✅ Online - Usando Railway Backend');
+                })
+                .catch(() => {
+                    MODO_OFFLINE = true;
+                    console.log('⚠️ Offline - Usando Backend Local ou Modo Puro JS');
+                    tentarBackendLocal();
+                });
+        }
+
+        function tentarBackendLocal() {
+            fetch(BACKEND_LOCAL, { mode: 'no-cors' })
+                .then(() => {
+                    console.log('✅ Backend Local detectado em ' + BACKEND_LOCAL);
+                })
+                .catch(() => {
+                    console.log('⚠️ Backend Local não disponível - Modo Puro JavaScript');
+                });
+        }
+
+        // Detectar ao carregar
+        window.addEventListener('load', () => {
+            setTimeout(detectarInternet, 500);
+        });
+    </script>
 
         let allFalhas = [];
         let allOutput = [];
@@ -374,7 +406,10 @@
             resultsSection.classList.add('hidden');
 
             try {
-                const response = await fetch(`${API_URL}/processar`, {
+                // Tentar API Online primeiro
+                const urlProcessar = MODO_OFFLINE ? `${BACKEND_LOCAL}/processar` : `${API_URL}/processar`;
+                
+                const response = await fetch(urlProcessar, {
                     method: 'POST',
                     body: formData,
                 });
@@ -390,10 +425,11 @@
 
                 loadingSection.classList.add('hidden');
                 resultsSection.classList.remove('hidden');
-                showMessage('✅ Processado com sucesso!', 'success');
+                showMessage(`✅ Processado com sucesso! (${MODO_OFFLINE ? 'Offline' : 'Online'})`, 'success');
 
             } catch (error) {
-                showMessage(`❌ ${error.message}`, 'error');
+                console.error('Erro ao processar:', error);
+                showMessage(`❌ ${error.message} - Tente com backend local ou online`, 'error');
                 loadingSection.classList.add('hidden');
             }
         });
