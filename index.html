@@ -233,12 +233,25 @@
     </main>
 
     <script>
-        // Registrar Service Worker para offline
+        // Service Worker desabilitado temporariamente
+        // O navegador pode estar tendo conflito com o registro
+        // Para funcionar offline, use o link normalmente (já está em cache do browser)
+        
+        /*
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('✅ Service Worker registrado'))
-                .catch(() => console.log('⚠️ Service Worker não registrado'));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js', { scope: './' })
+                    .then(reg => {
+                        console.log('✅ Service Worker registrado:', reg.scope);
+                    })
+                    .catch(err => {
+                        console.log('⚠️ Erro ao registrar SW:', err);
+                    });
+            });
+        } else {
+            console.log('⚠️ Service Worker não suportado');
         }
+        */
     </script>
 
     <script src="app.js"></script>
