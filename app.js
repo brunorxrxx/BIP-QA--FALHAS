@@ -351,7 +351,7 @@ function recomputarTudo() {
     desenharGraficoPareto(falhasFiltradas, 'Descrição.1', 'paretoCausaChart', 'causa');
     desenharGraficoPareto(falhasFiltradas, 'Item', 'paretoItemChart', 'item');
     desenharGraficoPizza(falhasFiltradas, 'Estacao_Ajustada', 'pieEstacaoChart', 'estacao');
-    desenharGraficoPizza(falhasFiltradas, 'Nome do Modelo', 'pieModeloChart', 'modelo');
+    desenharGraficoPizza(outputFiltrado, 'Nome do Modelo', 'pieModeloChart', 'modelo');
     desenharFalhasPreview(falhasFiltradas);
 }
 
@@ -542,27 +542,19 @@ function desenharGraficoPareto(falhas, campo, canvasId, tipo) {
 function desenharGraficoPizza(dados, campo, canvasId, tipo) {
     let cont = {};
     
-    // Para modelo: mapeia por Work Order
+    // Para modelo: SOMA Board Fail por modelo (não conta falhas)
     if (tipo === 'modelo') {
-        // Cria mapa Work Order → Modelo
-        const woParaModelo = {};
-        allOutput.forEach(o => {
-            if (o['Work Order'] && o['Nome do Modelo']) {
-                woParaModelo[o['Work Order']] = o['Nome do Modelo'];
-            }
-        });
-        
-        // Conta CADA FALHA FILTRADA
-        dados.forEach(falha => {
-            const wo = falha['Work Order'];
-            // Se falha tem Work Order e esse WO tem modelo, conta
-            if (wo && woParaModelo[wo]) {
-                const modelo = woParaModelo[wo];
-                cont[modelo] = (cont[modelo] || 0) + 1;
-            }
+        // Conta a soma de Board Fail por modelo
+        // Board Fail = Total - Board_Pass
+        dados.forEach(output => {
+            const modelo = output['Nome do Modelo'] || 'TBA';
+            const boardPass = parseInt(output['Board_Pass'] || 0);
+            const total = parseInt(output['Total'] || 0);
+            const boardFail = total - boardPass;
+            cont[modelo] = (cont[modelo] || 0) + boardFail;
         });
     } else {
-        // Para estação: conta direto pelo campo
+        // Para estação: conta direto as falhas
         dados.forEach(d => {
             const key = (d[campo] || 'TBA').toString();
             cont[key] = (cont[key] || 0) + 1;
@@ -586,17 +578,19 @@ function desenharGraficoPizza(dados, campo, canvasId, tipo) {
         'TBA': '#eeeeee'
     };
 
+    // Cores diferentes para cada modelo
+    const coresPaletaSaturadas = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+        '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B88B', '#A9DFBF',
+        '#F1948A', '#C39BD3', '#F5B041', '#82E0AA', '#D7BCCB',
+        '#AED6F1', '#F8B195', '#81C995', '#6C5B7B', '#355C7D'
+    ];
+
     let cores = [];
     if (tipo === 'estacao') {
         cores = Object.keys(cont).map(label => coresEstacoes[label] || '#0078d4');
     } else if (tipo === 'modelo') {
         // Cores diferentes para cada modelo
-        const coresPaletaSaturadas = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
-            '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B88B', '#A9DFBF',
-            '#F1948A', '#C39BD3', '#F5B041', '#82E0AA', '#D7BCCB',
-            '#AED6F1', '#F8B195', '#81C995', '#6C5B7B', '#355C7D'
-        ];
         cores = Object.keys(cont).map((_, idx) => coresPaletaSaturadas[idx % coresPaletaSaturadas.length]);
     } else {
         cores = ['#0078d4', '#0063b1', '#004b8a', '#003f7f', '#667eea', '#764ba2', '#f093fb'];
@@ -611,13 +605,22 @@ function desenharGraficoPizza(dados, campo, canvasId, tipo) {
             labels: Object.keys(cont),
             datasets: [{
                 data: Object.values(cont),
-                backgroundColor: cores
+                backgroundColor: cores,
+                borderColor: '#fff',
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } },
+            plugins: { 
+                legend: { position: 'bottom' },
+                datalabels: {
+                    color: '#000',
+                    font: { weight: 'bold' },
+                    formatter: (value) => value
+                }
+            },
             onClick: (evt, elements) => {
                 if (!elements.length) return;
                 const idx = elements[0].index;
