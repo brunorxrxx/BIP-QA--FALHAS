@@ -13,6 +13,12 @@
     <!-- Para suportar offline -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#003f7f">
+    
+    <!-- Cache headers para offline -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="BIP QA">
 </head>
 <body>
 
@@ -233,25 +239,18 @@
     </main>
 
     <script>
-        // Service Worker desabilitado temporariamente
-        // O navegador pode estar tendo conflito com o registro
-        // Para funcionar offline, use o link normalmente (já está em cache do browser)
-        
-        /*
+        // Service Worker para offline - versão melhorada
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js', { scope: './' })
+                navigator.serviceWorker.register('sw.js')
                     .then(reg => {
-                        console.log('✅ Service Worker registrado:', reg.scope);
+                        console.log('✅ Service Worker ativo - Funciona offline!');
                     })
                     .catch(err => {
-                        console.log('⚠️ Erro ao registrar SW:', err);
+                        console.log('ℹ️ SW não disponível, usando cache do navegador');
                     });
             });
-        } else {
-            console.log('⚠️ Service Worker não suportado');
         }
-        */
     </script>
 
     <script src="app.js"></script>
