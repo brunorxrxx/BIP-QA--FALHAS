@@ -9,12 +9,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    
+    <!-- Para suportar offline -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#003f7f">
 </head>
 <body>
 
     <header>
         <h1>🔧 BIP QA - Falhas x Output</h1>
         <p>Sistema de análise com gráficos interativos e filtros avançados</p>
+        <div id="status-offline" style="display:none; color: #ff9800; font-weight: bold; margin-top: 5px;">
+            ⚠️ Modo Offline (Dados em Cache)
+        </div>
     </header>
 
     <main>
@@ -224,6 +231,19 @@
             </div>
         </section>
     </main>
+
+    <script>
+        // Registrar Service Worker para offline
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('✅ Service Worker registrado'))
+                .catch(() => console.log('⚠️ Service Worker não registrado'));
+        }
+    </script>
+
+    <script src="app.js"></script>
+</body>
+</html>
 
     <script src="app.js"></script>
 </body>
