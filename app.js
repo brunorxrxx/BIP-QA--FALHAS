@@ -3,6 +3,28 @@ const API_URL = "https://web-production-cf763.up.railway.app";
 let MODO_OFFLINE = false;
 let BACKEND_LOCAL = "http://localhost:8000";
 
+// Detectar automaticamente ao carregar
+window.addEventListener('load', () => {
+    detectarInternet();
+});
+
+function detectarInternet() {
+    // Tenta conectar ao Railway
+    fetch(API_URL + '/processar', { 
+        method: 'HEAD',
+        mode: 'no-cors'
+    })
+        .then(() => {
+            MODO_OFFLINE = false;
+            console.log('✅ Online - Railway Backend');
+        })
+        .catch(() => {
+            // Se falhar, assume offline
+            MODO_OFFLINE = true;
+            console.log('⚠️ Offline - Backend Local (localhost:8000)');
+        });
+}
+
 let allFalhas = [];
 let allOutput = [];
 let filtroCliqueCausa = null;
@@ -36,34 +58,6 @@ const falhasTableBody = document.querySelector("#falhas-table tbody");
 const pivotModeloBody = document.querySelector("#pivot-modelo-table tbody");
 
 Chart.register(ChartDataLabels);
-
-// ========== DETECTAR INTERNET ==========
-function detectarInternet() {
-    fetch(API_URL, { mode: 'no-cors' })
-        .then(() => {
-            MODO_OFFLINE = false;
-            console.log('✅ Online - Usando Railway Backend');
-        })
-        .catch(() => {
-            MODO_OFFLINE = true;
-            console.log('⚠️ Offline - Tentando Backend Local');
-            tentarBackendLocal();
-        });
-}
-
-function tentarBackendLocal() {
-    fetch(BACKEND_LOCAL, { mode: 'no-cors' })
-        .then(() => {
-            console.log('✅ Backend Local detectado em ' + BACKEND_LOCAL);
-        })
-        .catch(() => {
-            console.log('⚠️ Backend Local não disponível');
-        });
-}
-
-window.addEventListener('load', () => {
-    setTimeout(detectarInternet, 500);
-});
 
 // ========== FUNÇÕES DE FILTRO ==========
 function toggleFilter(filterId) {
