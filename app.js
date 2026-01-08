@@ -179,7 +179,13 @@ processBtn.addEventListener('click', async () => {
         });
 
         const data = await response.json();
-        if (!response.ok) throw new Error(data.erro);
+        if (!response.ok) {
+            const mensagem = MODO_OFFLINE ? 
+                '⚠️ Offline: Processe arquivos com internet primeiro para cachear dados.' :
+                data.erro || 'Erro ao processar';
+            showMessage(`❌ ${mensagem}`, 'error');
+            throw new Error(mensagem);
+        }
 
         allFalhas = data.falhas_rows || [];
         allOutput = data.output_rows || [];
