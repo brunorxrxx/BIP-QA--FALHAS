@@ -45,3 +45,26 @@ npm-debug.log
 # Outros
 *.log
 .cache/
+
+# Excel temp
+~$*.xlsx
+*.xlsm
+*.xls
+
+# Arquivos de teste/temp
+*.tmp
+*.bak
+*.temp
+t.txt
+
+# Git
+.gitmodules
+
+# Submodules
+BIP-QA--FALHAS/
+BIP-FALHAS/
+
+# Pastas locais
+local/
+temp/
+tmp/
